@@ -1,0 +1,57 @@
+:root {
+  /* Colores primarios - Azul profundo / Negro elegante */
+  --primary-900: #05070f;
+  --primary-800: #0a0e1a;
+  --primary-700: #131829;
+  --primary-600: #1c2438;
+  --primary-500: #2a3550;
+
+  /* Acento - Azul eléctrico / Cian tecnológico */
+  --accent-600: #0066ff;
+  --accent-500: #2f7dff;
+  --accent-400: #5b9cff;
+  --accent-glow: #3ea6ff;
+
+  /* Acento secundario - Detalle premium */
+  --secondary-500: #7c5cff;
+  --secondary-400: #9d85ff;
+
+  /* Metálicos / elegancia */
+  --gold-500: #c9a45c;
+  --silver-400: #c4c9d4;
+
+  /* Estados */
+  --success-500: #16c784;
+  --warning-500: #f2b705;
+  --danger-500: #ff4d5e;
+  --info-500: #2f7dff;
+
+  /* Fondos */
+  --bg-body: #05070f;
+  --bg-surface: #0d1120;
+  --bg-card: #10152a;
+  --bg-header: #0a0e1a;
+  --bg-sidebar: #05070f;
+
+  /* Texto */
+  --text-primary: #f5f7fa;
+  --text-secondary: #b4bcd0;
+  --text-muted: #6b7280;
+  --text-on-accent: #ffffff;
+
+  /* Bordes y sombras */
+  --border-color: #1f2740;
+  --border-subtle: #161c30;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.45);
+  --shadow-glow: 0 0 20px rgba(47, 125, 255, 0.35);
+
+  /* Radios */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* Gradientes */
+  --gradient-primary: linear-gradient(135deg, #0a0e1a 0%, #131829 100%);
+  --gradient-accent: linear-gradient(135deg, #2f7dff 0%, #7c5cff 100%);
+}
