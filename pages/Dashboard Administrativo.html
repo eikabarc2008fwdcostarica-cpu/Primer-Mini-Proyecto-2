@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gorilla Logic | Dashboard Administrativo</title>
+  <link rel="stylesheet" href="../src/styles/Dashboard Administrativo.css">
+  <!-- Librería Chart.js para gráficos dinámicos (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ==================== MENÚ LATERAL ==================== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-badge">GL</div>
+        <span class="brand-text">Gorilla<span>Logic</span></span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-section="inicio">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M9.5 21v-6.5h5V21"/></svg>
+          Inicio
+        </a>
+        <a href="#" class="nav-item" data-section="proyectos">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
+          Proyectos
+        </a>
+        <!-- Solo visible para Administradores (RBAC) -->
+        <a href="#" class="nav-item" data-section="usuarios" id="nav-usuarios">
+          <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/><path d="M15.5 5.2A3.2 3.2 0 0 1 17 11.3"/><path d="M17.2 14a6 6 0 0 1 4 5.6"/></svg>
+          Usuarios
+        </a>
+        <a href="#" class="nav-item" data-section="reportes">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M12 20V4"/><path d="M20 20v-7"/><path d="M2.5 20h19"/></svg>
+          Reportes
+        </a>
+        <a href="#" class="nav-item" data-section="tareas">
+          <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="17" rx="2.5"/><path d="M8 12.3l2.6 2.6L16.3 9"/></svg>
+          Tareas
+        </a>
+        <a href="#" class="nav-item" data-section="configuracion">
+          <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .34 1.9l.06.06a2.1 2.1 0 1 1-2.96 2.96l-.06-.06a1.7 1.7 0 0 0-1.9-.34 1.7 1.7 0 0 0-1 1.55V19.9a2.1 2.1 0 1 1-4.2 0v-.09a1.7 1.7 0 0 0-1.1-1.55 1.7 1.7 0 0 0-1.9.34l-.06.06a2.1 2.1 0 1 1-2.96-2.96l.06-.06a1.7 1.7 0 0 0 .34-1.9 1.7 1.7 0 0 0-1.55-1H4.1a2.1 2.1 0 1 1 0-4.2h.09a1.7 1.7 0 0 0 1.55-1.1 1.7 1.7 0 0 0-.34-1.9l-.06-.06a2.1 2.1 0 1 1 2.96-2.96l.06.06a1.7 1.7 0 0 0 1.9.34H10.5a1.7 1.7 0 0 0 1-1.55V4.1a2.1 2.1 0 1 1 4.2 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.9-.34l.06-.06a2.1 2.1 0 1 1 2.96 2.96l-.06.06a1.7 1.7 0 0 0-.34 1.9V10.5a1.7 1.7 0 0 0 1.55 1H19.9a2.1 2.1 0 1 1 0 4.2h-.09a1.7 1.7 0 0 0-1.55 1Z"/></svg>
+          Configuración
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn-logout">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 21H5.5A2.5 2.5 0 0 1 3 18.5v-13A2.5 2.5 0 0 1 5.5 3H9"/><path d="M16.5 16.5 21 12l-4.5-4.5"/><path d="M21 12H9"/></svg>
+          Cerrar sesión
+        </button>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- ==================== CONTENIDO PRINCIPAL ==================== -->
+    <div class="main-wrapper">
+
+      <!-- ENCABEZADO -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="menu-toggle" class="menu-toggle" aria-label="Abrir menú">
+            <svg viewBox="0 0 24 24"><path d="M4 6.5h16"/><path d="M4 12h16"/><path d="M4 17.5h16"/></svg>
+          </button>
+          <h1 class="page-title" id="page-title">Panel Administrativo</h1>
+        </div>
+
+        <div class="topbar-right">
+          <span class="icon-btn" title="Notificaciones">
+            <svg viewBox="0 0 24 24"><path d="M12 3.5a5.5 5.5 0 0 0-5.5 5.5v3.2c0 .7-.25 1.37-.7 1.9L4.5 15.8c-.6.7-.13 1.8.79 1.8H18.7c.92 0 1.4-1.1.79-1.8l-1.3-1.7a3 3 0 0 1-.69-1.9V9A5.5 5.5 0 0 0 12 3.5Z"/><path d="M9.7 20a2.4 2.4 0 0 0 4.6 0"/></svg>
+            <span class="badge">3</span>
+          </span>
+
+          <!-- INFORMACIÓN DEL USUARIO (RBAC) -->
+          <div class="user-info">
+            <div class="user-avatar" id="user-avatar">GL</div>
+            <div class="user-text">
+              <span class="user-name" id="user-name">—</span>
+              <span class="user-role badge-role" id="user-role">—</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ÁREA PRINCIPAL DE TRABAJO -->
+      <main class="content">
+
+        <!-- ==================== VISTA: INICIO ==================== -->
+        <section class="view active" id="view-inicio">
+          <div class="content-heading">
+            <h2>Bienvenido, <span id="welcome-name">Usuario</span></h2>
+            <p>Este es el resumen general del sistema de Gorilla Logic.</p>
+          </div>
+
+          <section class="cards-grid">
+            <div class="stat-card">
+              <div class="stat-icon icon-accent">
+                <svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Proyectos Activos</span>
+                <span class="stat-value" id="stat-projects">0</span>
+                <span class="stat-trend" id="stat-projects-trend">Sin proyectos aún</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon icon-warning">
+                <svg viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="17" rx="2.5"/><path d="M8 12.3l2.6 2.6L16.3 9"/></svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Tareas Pendientes</span>
+                <span class="stat-value" id="stat-tasks">0</span>
+                <span class="stat-trend" id="stat-tasks-trend">Sin tareas aún</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon icon-secondary">
+                <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/><path d="M15.5 5.2A3.2 3.2 0 0 1 17 11.3"/><path d="M17.2 14a6 6 0 0 1 4 5.6"/></svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Usuarios Activos</span>
+                <span class="stat-value" id="stat-users">0</span>
+                <span class="stat-trend" id="stat-users-trend">Cuentas registradas</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon icon-success" id="stat-status-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 12.5 8 15l4.5-9 3 6.5H21"/></svg>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">Estado del Sistema</span>
+                <span class="stat-value status-ok" id="stat-status">Operativo</span>
+                <span class="stat-trend" id="stat-status-trend">Todo funcionando con normalidad</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="panels-grid">
+            <div class="panel">
+              <div class="panel-header"><h3>Actividad Reciente</h3></div>
+              <ul class="activity-list" id="activity-list"></ul>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header"><h3>Progreso de Proyectos</h3></div>
+              <div id="progress-list"></div>
+            </div>
+          </section>
+        </section>
+
+        <!-- ==================== VISTA: PROYECTOS ==================== -->
+        <section class="view" id="view-proyectos">
+          <div class="content-heading">
+            <h2>Proyectos</h2>
+            <p>Crea, analiza y da seguimiento detallado a los proyectos del equipo.</p>
+          </div>
+
+          <div class="panel form-panel">
+            <form id="project-form" class="inline-form">
+              <div class="inline-field grow">
+                <label for="project-name">Nombre del proyecto</label>
+                <input type="text" id="project-name" placeholder="Ej. Portal de Clientes" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras y espacios" required>
+              </div>
+              <div class="inline-field">
+                <label for="project-progress">Avance (%)</label>
+                <input type="number" id="project-progress" min="0" max="100" placeholder="0" required>
+              </div>
+              <div class="inline-field">
+                <label for="project-budget">Presupuesto ($ USD)</label>
+                <input type="number" id="project-budget" min="0" placeholder="5000" required>
+              </div>
+              <div class="inline-field">
+                <label for="project-deadline">Fecha Límite</label>
+                <input type="date" id="project-deadline" required>
+              </div>
+              <button type="submit" class="btn-primary small">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                <span>Crear proyecto</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- GRÁFICO DINÁMICO DE PRESUPUESTOS (Chart.js) -->
+          <div class="panel">
+            <div class="panel-header"><h3>Análisis de Presupuesto por Proyecto</h3></div>
+            <div class="chart-wrapper">
+              <canvas id="projectsChart"></canvas>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header"><h3>Listado de proyectos</h3></div>
+            <div class="list-panel" id="projects-list"></div>
+          </div>
+        </section>
+
+        <!-- ==================== VISTA: USUARIOS (Solo Administrador) ==================== -->
+        <section class="view" id="view-usuarios">
+          <div class="content-heading">
+            <h2>Usuarios</h2>
+            <p>Cuentas registradas en el sistema y su estado de actividad.</p>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header"><h3>Cuentas registradas</h3></div>
+            <div class="list-panel" id="users-list"></div>
+          </div>
+        </section>
+
+        <!-- ==================== VISTA: REPORTES ==================== -->
+        <section class="view" id="view-reportes">
+          <div class="content-heading">
+            <h2>Reportes</h2>
+            <p>Resumen general generado a partir de la información del sistema.</p>
+          </div>
+
+          <section class="cards-grid" id="reports-cards"></section>
+
+          <div class="panel">
+            <div class="panel-header"><h3>Avance por proyecto</h3></div>
+            <div id="reports-projects"></div>
+          </div>
+        </section>
+
+        <!-- ==================== VISTA: TAREAS ==================== -->
+        <section class="view" id="view-tareas">
+          <div class="content-heading">
+            <h2>Tareas</h2>
+            <p>Administra las tareas pendientes y completadas del equipo.</p>
+          </div>
+
+          <div class="panel form-panel">
+            <form id="task-form" class="inline-form">
+              <div class="inline-field grow">
+                <label for="task-title">Nombre de la tarea</label>
+                <input type="text" id="task-title" placeholder="Ej. Revisar diseño de login" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras y espacios" required>
+              </div>
+              <div class="inline-field">
+                <label for="task-assignee">Responsable</label>
+                <input type="text" id="task-assignee" placeholder="Ej. Carlos Pérez" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras y espacios" required>
+              </div>
+              <div class="inline-field">
+                <label for="task-priority">Prioridad</label>
+                <select id="task-priority" required>
+                  <option value="Alta">Alta</option>
+                  <option value="Media" selected>Media</option>
+                  <option value="Baja">Baja</option>
+                </select>
+              </div>
+              <div class="inline-field">
+                <label for="task-status">Estado inicial</label>
+                <select id="task-status" required>
+                  <option value="Pendiente" selected>Pendiente</option>
+                  <option value="Completada">Completada</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-primary small">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                <span>Agregar tarea</span>
+              </button>
+            </form>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header"><h3>Listado de tareas</h3></div>
+            <div class="list-panel" id="tasks-list"></div>
+          </div>
+        </section>
+
+        <!-- ==================== VISTA: CONFIGURACIÓN ==================== -->
+        <section class="view" id="view-configuracion">
+          <div class="content-heading">
+            <h2>Configuración</h2>
+            <p>Ajustes generales del sistema.</p>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header"><h3>Estado del sistema</h3></div>
+            <p class="panel-desc">Define si el sistema se muestra como operativo en el panel de Inicio y en los Reportes.</p>
+            <div class="toggle-row">
+              <label class="switch">
+                <input type="checkbox" id="system-status-toggle" checked>
+                <span class="slider"></span>
+              </label>
+              <span id="system-status-label" class="status-pill status-pill-ok">Operativo</span>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header"><h3>Mi cuenta</h3></div>
+            <p class="panel-desc" id="account-summary">—</p>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="../src/js/Dashboard Administrativo.js"></script>
+</body>
+</html>
