@@ -24,9 +24,17 @@
           <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M9.5 21v-6.5h5V21"/></svg>
           Inicio
         </a>
-        <a href="#" class="nav-item" data-section="proyectos">
-          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
-          Proyectos
+        <a href="#" class="nav-item" data-section="clientes">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Administración de Clientes
+        </a>
+        <a href="#" class="nav-item" data-section="productos">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          Administración de Productos
+        </a>
+        <a href="#" class="nav-item" data-section="proveedores">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M10 17h4"/><path d="M5 17h.01"/><path d="M19 17h.01"/><path d="M20 17h1a1 1 0 0 0 1-1v-5a2 2 0 0 0-2-2h-3V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h1"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+          Administración de Proveedores
         </a>
         <!-- Solo visible para Administradores (RBAC) -->
         <a href="#" class="nav-item" data-section="usuarios" id="nav-usuarios">
@@ -36,10 +44,6 @@
         <a href="#" class="nav-item" data-section="reportes">
           <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M12 20V4"/><path d="M20 20v-7"/><path d="M2.5 20h19"/></svg>
           Reportes
-        </a>
-        <a href="#" class="nav-item" data-section="tareas">
-          <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="17" rx="2.5"/><path d="M8 12.3l2.6 2.6L16.3 9"/></svg>
-          Tareas
         </a>
         <a href="#" class="nav-item" data-section="configuracion">
           <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .34 1.9l.06.06a2.1 2.1 0 1 1-2.96 2.96l-.06-.06a1.7 1.7 0 0 0-1.9-.34 1.7 1.7 0 0 0-1 1.55V19.9a2.1 2.1 0 1 1-4.2 0v-.09a1.7 1.7 0 0 0-1.1-1.55 1.7 1.7 0 0 0-1.9.34l-.06.06a2.1 2.1 0 1 1-2.96-2.96l.06-.06a1.7 1.7 0 0 0 .34-1.9 1.7 1.7 0 0 0-1.55-1H4.1a2.1 2.1 0 1 1 0-4.2h.09a1.7 1.7 0 0 0 1.55-1.1 1.7 1.7 0 0 0-.34-1.9l-.06-.06a2.1 2.1 0 1 1 2.96-2.96l.06.06a1.7 1.7 0 0 0 1.9.34H10.5a1.7 1.7 0 0 0 1-1.55V4.1a2.1 2.1 0 1 1 4.2 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.9-.34l.06-.06a2.1 2.1 0 1 1 2.96 2.96l-.06.06a1.7 1.7 0 0 0-.34 1.9V10.5a1.7 1.7 0 0 0 1.55 1H19.9a2.1 2.1 0 1 1 0 4.2h-.09a1.7 1.7 0 0 0-1.55 1Z"/></svg>
@@ -93,40 +97,40 @@
         <section class="view active" id="view-inicio">
           <div class="content-heading">
             <h2>Bienvenido, <span id="welcome-name">Usuario</span></h2>
-            <p>Este es el resumen general del sistema de Gorilla Logic.</p>
+            <p>Resumen operacional general del sistema Gorilla Logic.</p>
           </div>
 
           <section class="cards-grid">
             <div class="stat-card">
               <div class="stat-icon icon-accent">
-                <svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
               </div>
               <div class="stat-info">
-                <span class="stat-label">Proyectos Activos</span>
-                <span class="stat-value" id="stat-projects">0</span>
-                <span class="stat-trend" id="stat-projects-trend">Sin proyectos aún</span>
+                <span class="stat-label">Total Clientes</span>
+                <span class="stat-value" id="stat-clients">0</span>
+                <span class="stat-trend" id="stat-clients-trend">Clientes registrados</span>
               </div>
             </div>
 
             <div class="stat-card">
               <div class="stat-icon icon-warning">
-                <svg viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="17" rx="2.5"/><path d="M8 12.3l2.6 2.6L16.3 9"/></svg>
+                <svg viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
               </div>
               <div class="stat-info">
-                <span class="stat-label">Tareas Pendientes</span>
-                <span class="stat-value" id="stat-tasks">0</span>
-                <span class="stat-trend" id="stat-tasks-trend">Sin tareas aún</span>
+                <span class="stat-label">Total Productos</span>
+                <span class="stat-value" id="stat-products">0</span>
+                <span class="stat-trend" id="stat-products-trend">Artículos en catálogo</span>
               </div>
             </div>
 
             <div class="stat-card">
               <div class="stat-icon icon-secondary">
-                <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/><path d="M15.5 5.2A3.2 3.2 0 0 1 17 11.3"/><path d="M17.2 14a6 6 0 0 1 4 5.6"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M10 17h4"/><path d="M5 17h.01"/><path d="M19 17h.01"/><path d="M20 17h1a1 1 0 0 0 1-1v-5a2 2 0 0 0-2-2h-3V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h1"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
               </div>
               <div class="stat-info">
-                <span class="stat-label">Usuarios Activos</span>
-                <span class="stat-value" id="stat-users">0</span>
-                <span class="stat-trend" id="stat-users-trend">Cuentas registradas</span>
+                <span class="stat-label">Total Proveedores</span>
+                <span class="stat-value" id="stat-suppliers">0</span>
+                <span class="stat-trend" id="stat-suppliers-trend">Proveedores de insumos</span>
               </div>
             </div>
 
@@ -137,67 +141,63 @@
               <div class="stat-info">
                 <span class="stat-label">Estado del Sistema</span>
                 <span class="stat-value status-ok" id="stat-status">Operativo</span>
-                <span class="stat-trend" id="stat-status-trend">Todo funcionando con normalidad</span>
+                <span class="stat-trend" id="stat-status-trend">Servicios activos</span>
               </div>
             </div>
           </section>
 
           <section class="panels-grid">
             <div class="panel">
-              <div class="panel-header"><h3>Actividad Reciente</h3></div>
-              <ul class="activity-list" id="activity-list"></ul>
-            </div>
-
-            <div class="panel">
-              <div class="panel-header"><h3>Progreso de Proyectos</h3></div>
-              <div id="progress-list"></div>
+              <div class="panel-header"><h3>Resumen Operativo de Módulos</h3></div>
+              <div id="inicio-summary-metrics">
+                <!-- Se genera dinámicamente con las métricas de Clientes, Productos y Proveedores -->
+              </div>
             </div>
           </section>
         </section>
 
-        <!-- ==================== VISTA: PROYECTOS ==================== -->
-        <section class="view" id="view-proyectos">
+        <!-- ==================== VISTA: ADMINISTRACIÓN DE CLIENTES ==================== -->
+        <section class="view" id="view-clientes">
           <div class="content-heading">
-            <h2>Proyectos</h2>
-            <p>Crea, analiza y da seguimiento detallado a los proyectos del equipo.</p>
+            <h2>Administración de Clientes</h2>
+            <p>Gestión de la cartera de clientes, cuentas activas y directorio comercial.</p>
           </div>
 
-          <div class="panel form-panel">
-            <form id="project-form" class="inline-form">
-              <div class="inline-field grow">
-                <label for="project-name">Nombre del proyecto</label>
-                <input type="text" id="project-name" placeholder="Ej. Portal de Clientes" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras y espacios" required>
-              </div>
-              <div class="inline-field">
-                <label for="project-progress">Avance (%)</label>
-                <input type="number" id="project-progress" min="0" max="100" placeholder="0" required>
-              </div>
-              <div class="inline-field">
-                <label for="project-budget">Presupuesto ($ USD)</label>
-                <input type="number" id="project-budget" min="0" placeholder="5000" required>
-              </div>
-              <div class="inline-field">
-                <label for="project-deadline">Fecha Límite</label>
-                <input type="date" id="project-deadline" required>
-              </div>
-              <button type="submit" class="btn-primary small">
-                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-                <span>Crear proyecto</span>
-              </button>
-            </form>
-          </div>
-
-          <!-- GRÁFICO DINÁMICO DE PRESUPUESTOS (Chart.js) -->
           <div class="panel">
-            <div class="panel-header"><h3>Análisis de Presupuesto por Proyecto</h3></div>
-            <div class="chart-wrapper">
-              <canvas id="projectsChart"></canvas>
+            <div class="panel-header"><h3>Listado y Gestión de Clientes</h3></div>
+            <div class="list-panel" id="clientes-container">
+              <!-- AQUÍ SE ENLAZA LA LÓGICA Y TABLA/FORMULARIO DE ADMINISTRACIÓN DE CLIENTES -->
             </div>
           </div>
+        </section>
+
+        <!-- ==================== VISTA: ADMINISTRACIÓN DE PRODUCTOS ==================== -->
+        <section class="view" id="view-productos">
+          <div class="content-heading">
+            <h2>Administración de Productos</h2>
+            <p>Control de catálogo, inventario, precios y disponibilidad de productos.</p>
+          </div>
 
           <div class="panel">
-            <div class="panel-header"><h3>Listado de proyectos</h3></div>
-            <div class="list-panel" id="projects-list"></div>
+            <div class="panel-header"><h3>Catálogo e Inventario de Productos</h3></div>
+            <div class="list-panel" id="productos-container">
+              <!-- AQUÍ SE ENLAZA LA LÓGICA Y TABLA/FORMULARIO DE ADMINISTRACIÓN DE PRODUCTOS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== VISTA: ADMINISTRACIÓN DE PROVEEDORES ==================== -->
+        <section class="view" id="view-proveedores">
+          <div class="content-heading">
+            <h2>Administración de Proveedores</h2>
+            <p>Registro de proveedores, distribuidores y contactos de abastecimiento.</p>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header"><h3>Directorio de Proveedores</h3></div>
+            <div class="list-panel" id="proveedores-container">
+              <!-- AQUÍ SE ENLAZA LA LÓGICA Y TABLA/FORMULARIO DE ADMINISTRACIÓN DE PROVEEDORES -->
+            </div>
           </div>
         </section>
 
@@ -217,60 +217,22 @@
         <!-- ==================== VISTA: REPORTES ==================== -->
         <section class="view" id="view-reportes">
           <div class="content-heading">
-            <h2>Reportes</h2>
-            <p>Resumen general generado a partir de la información del sistema.</p>
+            <h2>Reportes y Estadísticas Generales</h2>
+            <p>Análisis de métricas agregadas de Clientes, Productos y Proveedores.</p>
           </div>
 
           <section class="cards-grid" id="reports-cards"></section>
 
           <div class="panel">
-            <div class="panel-header"><h3>Avance por proyecto</h3></div>
-            <div id="reports-projects"></div>
-          </div>
-        </section>
-
-        <!-- ==================== VISTA: TAREAS ==================== -->
-        <section class="view" id="view-tareas">
-          <div class="content-heading">
-            <h2>Tareas</h2>
-            <p>Administra las tareas pendientes y completadas del equipo.</p>
-          </div>
-
-          <div class="panel form-panel">
-            <form id="task-form" class="inline-form">
-              <div class="inline-field grow">
-                <label for="task-title">Nombre de la tarea</label>
-                <input type="text" id="task-title" placeholder="Ej. Revisar diseño de login" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras y espacios" required>
-              </div>
-              <div class="inline-field">
-                <label for="task-assignee">Responsable</label>
-                <input type="text" id="task-assignee" placeholder="Ej. Carlos Pérez" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo se permiten letras y espacios" required>
-              </div>
-              <div class="inline-field">
-                <label for="task-priority">Prioridad</label>
-                <select id="task-priority" required>
-                  <option value="Alta">Alta</option>
-                  <option value="Media" selected>Media</option>
-                  <option value="Baja">Baja</option>
-                </select>
-              </div>
-              <div class="inline-field">
-                <label for="task-status">Estado inicial</label>
-                <select id="task-status" required>
-                  <option value="Pendiente" selected>Pendiente</option>
-                  <option value="Completada">Completada</option>
-                </select>
-              </div>
-              <button type="submit" class="btn-primary small">
-                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-                <span>Agregar tarea</span>
-              </button>
-            </form>
+            <div class="panel-header"><h3>Comparativa General de Módulos</h3></div>
+            <div class="chart-wrapper">
+              <canvas id="reportsChart"></canvas>
+            </div>
           </div>
 
           <div class="panel">
-            <div class="panel-header"><h3>Listado de tareas</h3></div>
-            <div class="list-panel" id="tasks-list"></div>
+            <div class="panel-header"><h3>Desglose Detallado por Módulo</h3></div>
+            <div id="reports-breakdown"></div>
           </div>
         </section>
 

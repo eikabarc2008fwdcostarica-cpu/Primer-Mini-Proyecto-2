@@ -1,12 +1,9 @@
 /* ====================================================================
-   GORILLA LOGIC - Dashboard Administrativo (lógica funcional completa)
+   GORILLA LOGIC - Dashboard Administrativo
    ==================================================================== */
 
-// Instancia global para destruir y recrear el gráfico sin solapamientos
-let projectsChartInstance = null;
-
-// Expresión regular para validar únicamente letras, vocales con tildes, ñ y espacios
-const validTextRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+// Instancia global del gráfico para evitar duplicaciones
+let reportsChartInstance = null;
 
 // ==================== 1. SESIÓN Y PERMISOS ====================
 function requireSession() {
@@ -36,20 +33,23 @@ function saveUsers(users) {
   localStorage.setItem("gl_users", JSON.stringify(users));
 }
 
-// ==================== 2. DATOS DEL SISTEMA ====================
-const EMPTY_DATA = {
-  projects: [
-    { id: "p1", name: "Rediseño Portal Web", progress: 65, budget: 12000, deadline: "2026-10-15" },
-    { id: "p2", name: "Migración a la Nube", progress: 30, budget: 25000, deadline: "2026-12-01" }
+// ==================== 2. ESTRUCTURA Y LOCALSTORAGE ====================
+const DEFAULT_DATA = {
+  clientes: [
+    { id: "c1", nombre: "Empresa Alfa S.A.", contacto: "Juan Pérez", correo: "juan@alfa.com", estado: "Activo" },
+    { id: "c2", nombre: "Tech Solutions", contacto: "María Gómez", correo: "mgomez@tech.com", estado: "Activo" },
+    { id: "c3", nombre: "Comercializadora Beta", contacto: "Roberto Silva", correo: "rsilva@beta.com", estado: "Inactivo" }
   ],
-  tasks: [
-    { id: "t1", title: "Diseñar wireframes", assignee: "Ana Torres", priority: "Alta", done: false },
-    { id: "t2", title: "Configurar Servidores AWS", assignee: "Carlos Mendoza", priority: "Alta", done: true }
+  productos: [
+    { id: "p1", nombre: "Servidor Rack 2U", categoria: "Hardware", stock: 15, precio: 2500 },
+    { id: "p2", nombre: "Licencia Cloud Pro", categoria: "Software", stock: 120, precio: 150 },
+    { id: "p3", nombre: "Switch Gestionable 24P", categoria: "Redes", stock: 8, precio: 450 }
   ],
-  systemStatus: "operativo",
-  activity: [
-    { text: "Sistema iniciado correctamente", type: "accent" }
-  ]
+  proveedores: [
+    { id: "pr1", empresa: "Global Tech Inc.", rubro: "Hardware", contacto: "Pedro Alva", estado: "Activo" },
+    { id: "pr2", empresa: "Software Logistics", rubro: "Software", contacto: "Laura Ríos", estado: "Activo" }
+  ],
+  systemStatus: "operativo"
 };
 
 function getDataKey() {
@@ -60,31 +60,22 @@ function getDataKey() {
 function getData() {
   const stored = localStorage.getItem(getDataKey());
   if (!stored) {
-    const emptyData = JSON.parse(JSON.stringify(EMPTY_DATA));
-    localStorage.setItem(getDataKey(), JSON.stringify(emptyData));
-    return emptyData;
+    const initialData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    localStorage.setItem(getDataKey(), JSON.stringify(initialData));
+    return initialData;
   }
 
   try {
     return JSON.parse(stored);
   } catch {
-    const emptyData = JSON.parse(JSON.stringify(EMPTY_DATA));
-    localStorage.setItem(getDataKey(), JSON.stringify(emptyData));
-    return emptyData;
+    const initialData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    localStorage.setItem(getDataKey(), JSON.stringify(initialData));
+    return initialData;
   }
 }
 
 function saveData(data) {
   localStorage.setItem(getDataKey(), JSON.stringify(data));
-}
-
-function addActivity(data, text, type) {
-  data.activity.unshift({ text, type });
-  data.activity = data.activity.slice(0, 6);
-}
-
-function uid() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 }
 
 // ==================== 3. REFERENCIAS AL DOM ====================
@@ -101,32 +92,20 @@ const pageTitleEl = document.getElementById("page-title");
 
 const SECTION_TITLES = {
   inicio: "Panel Administrativo",
-  proyectos: "Proyectos",
+  clientes: "Administración de Clientes",
+  productos: "Administración de Productos",
+  proveedores: "Administración de Proveedores",
   usuarios: "Usuarios",
   reportes: "Reportes",
-  tareas: "Tareas",
   configuracion: "Configuración"
 };
 
-// ==================== 4. FILTRADO EN TIEMPO REAL ====================
-function initInputFilters() {
-  const textInputs = ["project-name", "task-title", "task-assignee"];
-  textInputs.forEach((id) => {
-    const input = document.getElementById(id);
-    if (input) {
-      input.addEventListener("input", (e) => {
-        e.target.value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, "");
-      });
-    }
-  });
-}
-
-// ==================== 5. NAVEGACIÓN Y CONTROL DE ROLES (RBAC) ====================
+// ==================== 4. NAVEGACIÓN Y PERMISOS (RBAC) ====================
 function switchSection(section) {
   const session = JSON.parse(localStorage.getItem("gl_session"));
 
   if (section === "usuarios" && session?.role !== "Administrador") {
-    alert("ACCESO DENEGADO: Tu cuenta no tiene permisos suficientes para acceder al módulo de gestión de usuarios.");
+    alert("ACCESO DENEGADO: Tu cuenta no tiene permisos suficientes para acceder al módulo de usuarios.");
     return;
   }
 
@@ -165,7 +144,7 @@ logoutBtn.addEventListener("click", () => {
   window.location.href = "Login (Autenticación).html";
 });
 
-// ==================== 6. RENDER: USUARIO Y ROLES ====================
+// ==================== 5. RENDER: USUARIO ====================
 function renderUser(session) {
   const initials = session.name
     .split(" ")
@@ -181,11 +160,7 @@ function renderUser(session) {
 
   const navUsuarios = document.getElementById("nav-usuarios");
   if (navUsuarios) {
-    if (session.role === "Administrador") {
-      navUsuarios.style.display = "flex";
-    } else {
-      navUsuarios.style.display = "none";
-    }
+    navUsuarios.style.display = session.role === "Administrador" ? "flex" : "none";
   }
 
   const accountSummary = document.getElementById("account-summary");
@@ -194,26 +169,23 @@ function renderUser(session) {
   }
 }
 
-// ==================== 7. RENDER: INICIO ====================
+// ==================== 6. RENDER: INICIO ====================
 function renderInicio() {
   const data = getData();
-  const users = getUsers();
 
-  const activeProjects = data.projects.filter((p) => p.progress < 100).length;
-  const pendingTasks = data.tasks.filter((t) => !t.done).length;
-  const activeUsers = users.filter((u) => u.active !== false).length;
+  const totalClientes = data.clientes.length;
+  const totalProductos = data.productos.length;
+  const totalProveedores = data.proveedores.length;
   const isOperativo = data.systemStatus === "operativo";
 
-  document.getElementById("stat-projects").textContent = activeProjects;
-  document.getElementById("stat-projects-trend").textContent =
-    activeProjects === 0 ? "Sin proyectos aún" : `${data.projects.length} proyecto(s) en total`;
+  document.getElementById("stat-clients").textContent = totalClientes;
+  document.getElementById("stat-clients-trend").textContent = `${totalClientes} cliente(s) en base de datos`;
 
-  document.getElementById("stat-tasks").textContent = pendingTasks;
-  document.getElementById("stat-tasks-trend").textContent =
-    data.tasks.length === 0 ? "Sin tareas aún" : `${data.tasks.length - pendingTasks} completada(s)`;
+  document.getElementById("stat-products").textContent = totalProductos;
+  document.getElementById("stat-products-trend").textContent = `${totalProductos} artículo(s) registrados`;
 
-  document.getElementById("stat-users").textContent = activeUsers;
-  document.getElementById("stat-users-trend").textContent = `${users.length} cuenta(s) registrada(s)`;
+  document.getElementById("stat-suppliers").textContent = totalProveedores;
+  document.getElementById("stat-suppliers-trend").textContent = `${totalProveedores} proveedor(es) activos`;
 
   const statusEl = document.getElementById("stat-status");
   const statusIconEl = document.getElementById("stat-status-icon");
@@ -223,164 +195,75 @@ function renderInicio() {
   statusIconEl.classList.toggle("icon-success", isOperativo);
   statusIconEl.classList.toggle("icon-danger", !isOperativo);
   document.getElementById("stat-status-trend").textContent = isOperativo
-    ? "Todo funcionando con normalidad"
-    : "Se detectaron interrupciones";
+    ? "Servicios activos"
+    : "Interrupciones registradas";
 
-  const activityList = document.getElementById("activity-list");
-  activityList.innerHTML = "";
-  if (data.activity.length === 0) {
-    activityList.innerHTML = '<li class="empty-text">Aún no hay actividad registrada.</li>';
-  } else {
-    data.activity.forEach((entry) => {
-      const li = document.createElement("li");
-      li.innerHTML = `<span class="dot dot-${entry.type}"></span> ${entry.text}`;
-      activityList.appendChild(li);
-    });
-  }
+  const metricsContainer = document.getElementById("inicio-summary-metrics");
+  metricsContainer.innerHTML = `
+    <div class="summary-row">
+      <span><strong>Clientes Activos</strong></span>
+      <span>${data.clientes.filter((c) => c.estado === "Activo").length} de ${totalClientes}</span>
+    </div>
+    <div class="summary-row">
+      <span><strong>Total Unidades en Stock (Productos)</strong></span>
+      <span>${data.productos.reduce((acc, p) => acc + (p.stock || 0), 0)} unidades</span>
+    </div>
+    <div class="summary-row">
+      <span><strong>Proveedores Activos</strong></span>
+      <span>${data.proveedores.filter((pr) => pr.estado === "Activo").length} de ${totalProveedores}</span>
+    </div>
+  `;
+}
 
-  const progressList = document.getElementById("progress-list");
-  progressList.innerHTML = "";
-  if (data.projects.length === 0) {
-    progressList.innerHTML = '<p class="empty-text">Aún no hay proyectos creados.</p>';
-  } else {
-    data.projects.forEach((project) => {
-      const item = document.createElement("div");
-      item.className = "progress-item";
-      item.innerHTML = `
-        <div class="progress-label"><span>${project.name}</span><span>${project.progress}%</span></div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${project.progress}%"></div></div>
-      `;
-      progressList.appendChild(item);
-    });
+// ==================== 7. RENDER: CLIENTES ====================
+function renderClientes() {
+  const container = document.getElementById("clientes-container");
+  
+  // AQUÍ SE ENLAZA LA LÓGICA DE CLIENTES
+  // Muestra el resumen por defecto en el contenedor si no hay código externo aún
+  const data = getData();
+  if (!container.children.length || container.querySelector(".placeholder-info")) {
+    container.innerHTML = `
+      <div class="placeholder-info">
+        <p class="empty-text">Módulo de Administración de Clientes listo. Total actual: <strong>${data.clientes.length}</strong> clientes.</p>
+      </div>
+    `;
   }
 }
 
-// ==================== 8. RENDER Y LÓGICA: PROYECTOS ====================
-function renderProyectos() {
+// ==================== 8. RENDER: PRODUCTOS ====================
+function renderProductos() {
+  const container = document.getElementById("productos-container");
+
+  // AQUÍ SE ENLAZA LA LÓGICA DE PRODUCTOS
+  // Muestra el resumen por defecto en el contenedor si no hay código externo aún
   const data = getData();
-  const list = document.getElementById("projects-list");
-  list.innerHTML = "";
-
-  if (data.projects.length === 0) {
-    list.innerHTML = '<p class="empty-text">Aún no has creado ningún proyecto.</p>';
-  } else {
-    data.projects.forEach((project) => {
-      const isComplete = project.progress >= 100;
-      const item = document.createElement("div");
-      item.className = "list-item";
-      item.innerHTML = `
-        <div class="list-item-main">
-          <div class="list-item-title">
-            ${project.name}
-            <span class="status-pill ${isComplete ? "status-pill-ok" : "status-pill-muted"}">
-              ${isComplete ? "Completado" : "En curso"}
-            </span>
-          </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:${project.progress}%"></div></div>
-          <div class="list-item-sub" style="margin-top:6px;">
-            ${project.progress}% de avance | Presupuesto: $${(project.budget || 0).toLocaleString()} USD | Fecha Límite: ${project.deadline || "Sin definir"}
-          </div>
-        </div>
-        <div class="list-item-actions">
-          <button class="icon-action-btn" data-delete-project="${project.id}" title="Eliminar proyecto">
-            <svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6.5 7l1 12.5A2 2 0 0 0 9.5 21h5a2 2 0 0 0 2-1.5L17.5 7"/></svg>
-          </button>
-        </div>
-      `;
-      list.appendChild(item);
-    });
-  }
-
-  list.querySelectorAll("[data-delete-project]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const currentData = getData();
-      const project = currentData.projects.find((p) => p.id === btn.dataset.deleteProject);
-
-      if (!project) return;
-
-      const confirmText = prompt(`VERIFICACIÓN DE SEGURIDAD ESTRICTA:\nEscribe el nombre exacto del proyecto ("${project.name}") para autorizar la eliminación:`);
-
-      if (confirmText === project.name) {
-        currentData.projects = currentData.projects.filter((p) => p.id !== btn.dataset.deleteProject);
-        addActivity(currentData, `Proyecto "${project.name}" eliminado definitivamente`, "danger");
-        saveData(currentData);
-        renderAll();
-      } else if (confirmText !== null) {
-        alert("El nombre ingresado no coincide. Proceso de eliminación cancelado.");
-      }
-    });
-  });
-
-  const ctx = document.getElementById('projectsChart');
-  if (ctx && typeof Chart !== "undefined") {
-    if (projectsChartInstance) {
-      projectsChartInstance.destroy();
-    }
-
-    const labels = data.projects.map(p => p.name);
-    const budgets = data.projects.map(p => p.budget || 0);
-
-    projectsChartInstance = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Presupuesto ($ USD)',
-          data: budgets,
-          backgroundColor: 'rgba(47, 125, 255, 0.85)',
-          borderColor: '#2f7dff',
-          borderWidth: 1,
-          borderRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { labels: { color: '#b4bcd0' } }
-        },
-        scales: {
-          x: { ticks: { color: '#b4bcd0' }, grid: { color: '#1f2740' } },
-          y: { ticks: { color: '#b4bcd0' }, grid: { color: '#1f2740' }, beginAtZero: true }
-        }
-      }
-    });
+  if (!container.children.length || container.querySelector(".placeholder-info")) {
+    container.innerHTML = `
+      <div class="placeholder-info">
+        <p class="empty-text">Módulo de Administración de Productos listo. Total actual: <strong>${data.productos.length}</strong> productos.</p>
+      </div>
+    `;
   }
 }
 
-document.getElementById("project-form").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const nameInput = document.getElementById("project-name");
-  const progressInput = document.getElementById("project-progress");
-  const budgetInput = document.getElementById("project-budget");
-  const deadlineInput = document.getElementById("project-deadline");
+// ==================== 9. RENDER: PROVEEDORES ====================
+function renderProveedores() {
+  const container = document.getElementById("proveedores-container");
 
-  const name = nameInput.value.trim();
-
-  // Validación estricta con Expresión Regular
-  if (!name || !validTextRegex.test(name)) {
-    alert("Error: El nombre del proyecto solo debe contener letras, vocales con tilde y espacios.");
-    return;
-  }
-
-  let progress = parseInt(progressInput.value, 10) || 0;
-  progress = Math.max(0, Math.min(100, progress));
-  const budget = parseFloat(budgetInput.value) || 0;
-  const deadline = deadlineInput.value;
-
+  // AQUÍ SE ENLAZA LA LÓGICA DE PROVEEDORES
+  // Muestra el resumen por defecto en el contenedor si no hay código externo aún
   const data = getData();
-  data.projects.push({ id: uid(), name, progress, budget, deadline });
-  addActivity(data, `Nuevo proyecto "${name}" creado`, "accent");
-  saveData(data);
+  if (!container.children.length || container.querySelector(".placeholder-info")) {
+    container.innerHTML = `
+      <div class="placeholder-info">
+        <p class="empty-text">Módulo de Administración de Proveedores listo. Total actual: <strong>${data.proveedores.length}</strong> proveedores.</p>
+      </div>
+    `;
+  }
+}
 
-  nameInput.value = "";
-  progressInput.value = "";
-  budgetInput.value = "";
-  deadlineInput.value = "";
-  renderAll();
-});
-
-// ==================== 9. RENDER Y LÓGICA: USUARIOS ====================
+// ==================== 10. RENDER: USUARIOS ====================
 function renderUsuarios() {
   const users = getUsers();
   const session = JSON.parse(localStorage.getItem("gl_session"));
@@ -422,194 +305,111 @@ function renderUsuarios() {
       if (!user) return;
       user.active = toggle.checked;
       saveUsers(allUsers);
-
-      const data = getData();
-      addActivity(data, `Usuario "${user.name}" marcado como ${toggle.checked ? "activo" : "inactivo"}`, toggle.checked ? "success" : "warning");
-      saveData(data);
-
       renderAll();
     });
   });
 }
-
-// ==================== 10. RENDER Y LÓGICA: TAREAS ====================
-function renderTareas() {
-  const data = getData();
-  const list = document.getElementById("tasks-list");
-  list.innerHTML = "";
-
-  if (data.tasks.length === 0) {
-    list.innerHTML = '<p class="empty-text">No hay tareas registradas.</p>';
-    return;
-  }
-
-  data.tasks.forEach((task) => {
-    const item = document.createElement("div");
-    item.className = "list-item";
-    const priorityClass = task.priority === 'Alta' ? 'status-pill-down' : task.priority === 'Media' ? 'status-pill-warning' : 'status-pill-ok';
-    
-    item.innerHTML = `
-      <div class="list-item-main">
-        <div class="list-item-title task-title ${task.done ? "done" : ""}">
-          ${task.title}
-          <span class="status-pill ${priorityClass}">Prioridad: ${task.priority || 'Media'}</span>
-          <span class="status-pill ${task.done ? 'status-pill-ok' : 'status-pill-muted'}">${task.done ? 'Completada' : 'Pendiente'}</span>
-        </div>
-        <div class="list-item-sub">
-          Responsable: <strong>${task.assignee || "Sin Asignar"}</strong>
-        </div>
-      </div>
-      <div class="list-item-actions">
-        <button class="icon-action-btn check" data-toggle-task="${task.id}" title="${task.done ? "Marcar como pendiente" : "Marcar como completada"}">
-          <svg viewBox="0 0 24 24"><path d="M5 12.5 9.5 17 19 7.5"/></svg>
-        </button>
-        <button class="icon-action-btn" data-delete-task="${task.id}" title="Eliminar tarea">
-          <svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6.5 7l1 12.5A2 2 0 0 0 9.5 21h5a2 2 0 0 0 2-1.5L17.5 7"/></svg>
-        </button>
-      </div>
-    `;
-    list.appendChild(item);
-  });
-
-  list.querySelectorAll("[data-toggle-task]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const data = getData();
-      const task = data.tasks.find((t) => t.id === btn.dataset.toggleTask);
-      if (!task) return;
-      task.done = !task.done;
-      addActivity(data, `Tarea "${task.title}" marcada como ${task.done ? "completada" : "pendiente"}`, task.done ? "success" : "warning");
-      saveData(data);
-      renderAll();
-    });
-  });
-
-  list.querySelectorAll("[data-delete-task]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const data = getData();
-      const task = data.tasks.find((t) => t.id === btn.dataset.deleteTask);
-
-      if (!task) return;
-
-      const firstConfirm = confirm(`[Paso 1 de 2]: ¿Deseas solicitar la eliminación de la tarea "${task.title}"?`);
-      if (firstConfirm) {
-        const secondConfirm = confirm(`[Paso 2 de 2 - CONFIRMACIÓN FINAL]: ¿Estás totalmente seguro de borrar permanentemente "${task.title}"?`);
-        if (secondConfirm) {
-          data.tasks = data.tasks.filter((t) => t.id !== btn.dataset.deleteTask);
-          addActivity(data, `Tarea "${task.title}" eliminada`, "danger");
-          saveData(data);
-          renderAll();
-        }
-      }
-    });
-  });
-}
-
-document.getElementById("task-form").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const titleInput = document.getElementById("task-title");
-  const assigneeInput = document.getElementById("task-assignee");
-  const priorityInput = document.getElementById("task-priority");
-  const statusInput = document.getElementById("task-status");
-
-  const title = titleInput.value.trim();
-  const assignee = assigneeInput.value.trim();
-
-  // Validación estricta con Expresión Regular para Nombre de la Tarea
-  if (!title || !validTextRegex.test(title)) {
-    alert("Error: El nombre de la tarea solo debe contener letras, vocales con tilde y espacios.");
-    return;
-  }
-
-  // Validación estricta con Expresión Regular para Responsable
-  if (!assignee || !validTextRegex.test(assignee)) {
-    alert("Error: El campo de responsable solo debe contener letras, vocales con tilde y espacios.");
-    return;
-  }
-
-  const priority = priorityInput.value;
-  const isDone = statusInput.value === "Completada";
-
-  const data = getData();
-  data.tasks.push({ id: uid(), title, assignee, priority, done: isDone });
-  addActivity(data, `Nueva tarea "${title}" creada para ${assignee}`, "accent");
-  saveData(data);
-
-  titleInput.value = "";
-  assigneeInput.value = "";
-  priorityInput.value = "Media";
-  statusInput.value = "Pendiente";
-  renderAll();
-});
 
 // ==================== 11. RENDER: REPORTES ====================
 function renderReportes() {
   const data = getData();
-  const users = getUsers();
 
-  const totalProjects = data.projects.length;
-  const avgProgress = totalProjects === 0
-    ? 0
-    : Math.round(data.projects.reduce((sum, p) => sum + p.progress, 0) / totalProjects);
-
-  const completedTasks = data.tasks.filter((t) => t.done).length;
-  const pendingTasks = data.tasks.length - completedTasks;
-  const activeUsers = users.filter((u) => u.active !== false).length;
+  const totalClientes = data.clientes.length;
+  const totalProductos = data.productos.length;
+  const totalProveedores = data.proveedores.length;
   const isOperativo = data.systemStatus === "operativo";
 
   const cards = document.getElementById("reports-cards");
   cards.innerHTML = `
     <div class="stat-card">
-      <div class="stat-icon icon-accent"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg></div>
+      <div class="stat-icon icon-accent"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
       <div class="stat-info">
-        <span class="stat-label">Progreso promedio</span>
-        <span class="stat-value">${avgProgress}%</span>
-        <span class="stat-trend">${totalProjects} proyecto(s) registrados</span>
+        <span class="stat-label">Clientes</span>
+        <span class="stat-value">${totalClientes}</span>
+        <span class="stat-trend">${data.clientes.filter((c) => c.estado === "Activo").length} activos</span>
       </div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon icon-warning"><svg viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="17" rx="2.5"/><path d="M8 12.3l2.6 2.6L16.3 9"/></svg></div>
+      <div class="stat-icon icon-warning"><svg viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div>
       <div class="stat-info">
-        <span class="stat-label">Tareas completadas</span>
-        <span class="stat-value">${completedTasks}</span>
-        <span class="stat-trend">${pendingTasks} pendiente(s)</span>
+        <span class="stat-label">Productos</span>
+        <span class="stat-value">${totalProductos}</span>
+        <span class="stat-trend">En catálogo</span>
       </div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon icon-secondary"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/><path d="M15.5 5.2A3.2 3.2 0 0 1 17 11.3"/><path d="M17.2 14a6 6 0 0 1 4 5.6"/></svg></div>
+      <div class="stat-icon icon-secondary"><svg viewBox="0 0 24 24"><path d="M10 17h4"/><path d="M5 17h.01"/><path d="M19 17h.01"/><path d="M20 17h1a1 1 0 0 0 1-1v-5a2 2 0 0 0-2-2h-3V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h1"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg></div>
       <div class="stat-info">
-        <span class="stat-label">Usuarios activos</span>
-        <span class="stat-value">${activeUsers}</span>
-        <span class="stat-trend">${users.length} registrados en total</span>
+        <span class="stat-label">Proveedores</span>
+        <span class="stat-value">${totalProveedores}</span>
+        <span class="stat-trend">${data.proveedores.filter((pr) => pr.estado === "Activo").length} activos</span>
       </div>
     </div>
     <div class="stat-card">
       <div class="stat-icon ${isOperativo ? "icon-success" : "icon-danger"}"><svg viewBox="0 0 24 24"><path d="M3 12.5 8 15l4.5-9 3 6.5H21"/></svg></div>
       <div class="stat-info">
-        <span class="stat-label">Estado del sistema</span>
+        <span class="stat-label">Sistema</span>
         <span class="stat-value ${isOperativo ? "status-ok" : "status-down"}">${isOperativo ? "Operativo" : "Fuera de servicio"}</span>
-        <span class="stat-trend">Definido en Configuración</span>
+        <span class="stat-trend">Estado actual</span>
       </div>
     </div>
   `;
 
-  const projectsReport = document.getElementById("reports-projects");
-  projectsReport.innerHTML = "";
-  if (data.projects.length === 0) {
-    projectsReport.innerHTML = '<p class="empty-text">No hay proyectos para mostrar en el reporte.</p>';
-  } else {
-    data.projects.forEach((project) => {
-      const item = document.createElement("div");
-      item.className = "progress-item";
-      item.innerHTML = `
-        <div class="progress-label"><span>${project.name}</span><span>${project.progress}%</span></div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${project.progress}%"></div></div>
-      `;
-      projectsReport.appendChild(item);
+  // Gráfico en Chart.js
+  const ctx = document.getElementById("reportsChart");
+  if (ctx && typeof Chart !== "undefined") {
+    if (reportsChartInstance) {
+      reportsChartInstance.destroy();
+    }
+
+    reportsChartInstance = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["Clientes", "Productos", "Proveedores"],
+        datasets: [
+          {
+            label: "Registros Totales",
+            data: [totalClientes, totalProductos, totalProveedores],
+            backgroundColor: ["rgba(47, 125, 255, 0.85)", "rgba(242, 183, 5, 0.85)", "rgba(124, 92, 255, 0.85)"],
+            borderColor: ["#2f7dff", "#f2b705", "#7c5cff"],
+            borderWidth: 1,
+            borderRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { color: "#b4bcd0" } }
+        },
+        scales: {
+          x: { ticks: { color: "#b4bcd0" }, grid: { color: "#1f2740" } },
+          y: { ticks: { color: "#b4bcd0" }, grid: { color: "#1f2740" }, beginAtZero: true }
+        }
+      }
     });
   }
+
+  // Panel de desglose detallado
+  const breakdown = document.getElementById("reports-breakdown");
+  breakdown.innerHTML = `
+    <div class="summary-row">
+      <span>Clientes Activos vs Inactivos</span>
+      <span>${data.clientes.filter((c) => c.estado === "Activo").length} Activos / ${data.clientes.filter((c) => c.estado === "Inactivo").length} Inactivos</span>
+    </div>
+    <div class="summary-row">
+      <span>Stock Total de Productos</span>
+      <span>${data.productos.reduce((acc, p) => acc + (p.stock || 0), 0)} unidades en almacén</span>
+    </div>
+    <div class="summary-row">
+      <span>Proveedores Activos</span>
+      <span>${data.proveedores.filter((pr) => pr.estado === "Activo").length} con contrato activo</span>
+    </div>
+  `;
 }
 
-// ==================== 12. RENDER Y LÓGICA: CONFIGURACIÓN ====================
+// ==================== 12. RENDER: CONFIGURACIÓN ====================
 function renderConfiguracion() {
   const data = getData();
   const toggle = document.getElementById("system-status-toggle");
@@ -625,11 +425,6 @@ function renderConfiguracion() {
 document.getElementById("system-status-toggle").addEventListener("change", (e) => {
   const data = getData();
   data.systemStatus = e.target.checked ? "operativo" : "inactivo";
-  addActivity(
-    data,
-    `Estado del sistema cambiado a ${e.target.checked ? "Operativo" : "Fuera de servicio"}`,
-    e.target.checked ? "success" : "danger"
-  );
   saveData(data);
   renderAll();
 });
@@ -637,9 +432,10 @@ document.getElementById("system-status-toggle").addEventListener("change", (e) =
 // ==================== 13. RENDER GENERAL ====================
 function renderAll() {
   renderInicio();
-  renderProyectos();
+  renderClientes();
+  renderProductos();
+  renderProveedores();
   renderUsuarios();
-  renderTareas();
   renderReportes();
   renderConfiguracion();
 }
@@ -647,7 +443,6 @@ function renderAll() {
 // ==================== 14. INICIALIZACIÓN ====================
 const currentSession = requireSession();
 if (currentSession) {
-  initInputFilters();
   getData();
   renderUser(currentSession);
   renderAll();
