@@ -1,3 +1,4 @@
+
 :root {
   /* Colores primarios - Azul profundo / Negro elegante */
   --primary-900: #05070f;
@@ -54,4 +55,80 @@
   /* Gradientes */
   --gradient-primary: linear-gradient(135deg, #0a0e1a 0%, #131829 100%);
   --gradient-accent: linear-gradient(135deg, #2f7dff 0%, #7c5cff 100%);
+}
+
+/* IDs del HTML */
+body {
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+  font-family: Arial, sans-serif;
+}
+
+#buscador {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+#mensajeError {
+  color: var(--danger-500);
+  font-weight: bold;
+}
+
+#totalProveedores {
+  color: var(--info-500);
+  font-style: italic;
+}
+
+#formProveedor {
+  background: var(--bg-surface);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+#formProveedor input {
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+#formProveedor button {
+  background: var(--accent-500);
+  color: var(--text-on-accent);
+  border: none;
+  padding: 10px 15px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+#formProveedor button:hover {
+  background: var(--accent-600);
+  box-shadow: var(--shadow-glow);
+}
+
+#tablaProveedores {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+#tablaProveedores th, #tablaProveedores td {
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  text-align: center;
+}
+
+#tablaProveedores th {
+  background: var(--gradient-primary);
+  color: var(--text-primary);
+}
+
+#tablaProveedores tr:nth-child(even) {
+  background-color: var(--bg-card);
 }
