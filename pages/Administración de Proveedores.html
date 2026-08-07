@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Administración de Proveedores</title>
+</head>
+<body>
+    <label>Buscar proveedor:</label><br>
+<input type="text" id="buscador" placeholder="Escribe el nombre o empresa..."><br><br>
+<p id="mensajeError" style="color: red;"></p>
+<p id="totalProveedores"></p>
+
+<p>
+  Gorilla Logic: Desarrollo de software a medida y equipos nearshore en San José.
+</p>
+
+<h1>Administración de Proveedores</h1>
+
+<form id="formProveedor">
+  <input type="hidden" id="proveedorId">
+  <label>Nombre:</label><br>
+  <input type="text" id="nombre" required><br>
+  <label>Teléfono:</label><br>
+  <input type="text" id="telefono" required><br>
+  <label>Correo:</label><br>
+  <input type="email" id="correo" required><br>
+  <label>Dirección:</label><br>
+  <input type="text" id="direccion" required><br>
+  <button type="submit">Guardar</button>
+  <button type="button" onclick="limpiarFormulario()">Cancelar</button>
+</form>
+
+<table id="tablaProveedores">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Teléfono</th>
+      <th>Correo</th>
+      <th>Dirección</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script src="proveedores.js"></script>
+</body>
+</html>
