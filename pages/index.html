@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración | Productos y Proveedores</title>
+    <link rel="stylesheet" href="/src/styles/Administración de Productos.css">
+    <link rel="stylesheet" href="/Primer-Mini-Proyecto-2/src/styles/Administración de Proveedores.css">
+    <link rel="stylesheet" href="/Primer-Mini-Proyecto-2/src/styles/index.css">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="marca">
+                <div class="marca-icono">AP</div>
+                <div>
+                    <h1>Administración</h1>
+                    <p>Gorilla Logic</p>
+                </div>
+            </div>
+
+            <nav class="menu" aria-label="Navegación principal">
+                <button class="menu-link active" type="button" data-seccion="productos">
+                    <span class="menu-icono">▦</span>
+                    Productos
+                </button>
+
+                <button class="menu-link" type="button" data-seccion="proveedores">
+                    <span class="menu-icono">◇</span>
+                    Proveedores
+                </button>
+            </nav>
+
+            <div class="sidebar-info">
+                <span class="estado-punto"></span>
+                Persistencia activa
+                <small>LocalStorage</small>
+            </div>
+        </aside>
+
+        <main class="contenido">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">Panel administrativo</p>
+                    <h2 id="tituloPagina">Administración de Productos</h2>
+                </div>
+
+                
+            </header>
+
+            <!-- ===========================
+                 PRODUCTOS
+            ============================ -->
+            <section id="seccionProductos" class="seccion activa">
+                <div class="resumen">
+                    <article class="resumen-card">
+                        <span class="resumen-label">Productos registrados</span>
+                        <strong id="totalProductos">0</strong>
+                    </article>
+
+                    <article class="resumen-card">
+                        <span class="resumen-label">Unidades en inventario</span>
+                        <strong id="totalStock">0</strong>
+                    </article>
+
+                    <article class="resumen-card">
+                        <span class="resumen-label">Proveedores disponibles</span>
+                        <strong id="totalProveedoresProductos">0</strong>
+                    </article>
+                </div>
+
+                <div class="grid-principal">
+                    <article class="card formulario-card">
+                        <div class="card-header">
+                            <div>
+                                <p class="eyebrow">Formulario</p>
+                                <h3 id="tituloFormularioProducto">Registrar producto</h3>
+                            </div>
+                            <span class="chip">CRUD</span>
+                        </div>
+
+                        <form id="formProducto" novalidate>
+                            <input type="hidden" id="productoId">
+
+                            <div class="campo">
+                                <label for="productoNombre">Nombre del producto *</label>
+                                <input id="productoNombre" type="text" maxlength="80"
+                                       placeholder="Ej. Laptop">
+                            </div>
+
+                            <div class="campo">
+                                <label for="productoCategoria">Categoría *</label>
+                                <input id="productoCategoria" type="text" maxlength="60"
+                                       placeholder="Ej. Tecnología">
+                            </div>
+
+                            <div class="fila-campos">
+                                <div class="campo">
+                                    <label for="productoPrecio">Precio *</label>
+                                    <input id="productoPrecio" type="number" min="0.01"
+                                           step="0.01" placeholder="0.00">
+                                </div>
+
+                                <div class="campo">
+                                    <label for="productoStock">Stock *</label>
+                                    <input id="productoStock" type="number" min="0"
+                                           step="1" placeholder="0">
+                                </div>
+                            </div>
+
+                            <div class="campo">
+                                <label for="productoProveedor">Proveedor *</label>
+                                <select id="productoProveedor">
+                                    <option value="">Seleccione un proveedor</option>
+                                </select>
+                                <small class="ayuda">
+                                    Las opciones se cargan automáticamente desde LocalStorage.
+                                </small>
+                            </div>
+
+                            <div id="mensajeProducto" class="mensaje" role="alert"></div>
+
+                            <div class="acciones-formulario">
+                                <button class="btn btn-primary" type="submit" id="btnGuardarProducto">
+                                    Guardar producto
+                                </button>
+                                <button class="btn btn-secondary oculto" type="button" id="btnCancelarProducto">
+                                    Cancelar edición
+                                </button>
+                            </div>
+                        </form>
+                    </article>
+
+                    <article class="card tabla-card">
+                        <div class="card-header">
+                            <div>
+                                <p class="eyebrow">Inventario</p>
+                                <h3>Lista de productos</h3>
+                            </div>
+                        </div>
+
+                        <div class="tabla-contenedor">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Categoría</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                        <th>Proveedor</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaProductos"></tbody>
+                            </table>
+                        </div>
+
+                        <div id="sinProductos" class="estado-vacio">
+                            No hay productos registrados.
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ===========================
+                 PROVEEDORES
+            ============================ -->
+            <section id="seccionProveedores" class="seccion">
+                <div class="resumen">
+                    <article class="resumen-card">
+                        <span class="resumen-label">Proveedores registrados</span>
+                        <strong id="totalProveedores">0</strong>
+                    </article>
+
+                    <article class="resumen-card">
+                        <span class="resumen-label">Empresas registradas</span>
+                        <strong id="totalEmpresas">0</strong>
+                    </article>
+
+                    <article class="resumen-card">
+                        <span class="resumen-label">Productos vinculados</span>
+                        <strong id="productosVinculados">0</strong>
+                    </article>
+                </div>
+
+                <div class="grid-principal">
+                    <article class="card formulario-card">
+                        <div class="card-header">
+                            <div>
+                                <p class="eyebrow">Formulario</p>
+                                <h3 id="tituloFormularioProveedor">Registrar proveedor</h3>
+                            </div>
+                            <span class="chip">CRUD</span>
+                        </div>
+
+                        <form id="formProveedor" novalidate>
+                            <input type="hidden" id="proveedorId">
+
+                            <div class="campo">
+                                <label for="proveedorNombre">Nombre del proveedor *</label>
+                                <input id="proveedorNombre" type="text" maxlength="80"
+                                       placeholder="Ej. Carlos Vargas">
+                            </div>
+
+                            <div class="campo">
+                                <label for="proveedorEmpresa">Empresa *</label>
+                                <input id="proveedorEmpresa" type="text" maxlength="80"
+                                       placeholder="Ej. Tech CR">
+                            </div>
+
+                            <div class="campo">
+                                <label for="proveedorTelefono">Teléfono *</label>
+                                <input id="proveedorTelefono" type="tel" maxlength="25"
+                                       placeholder="Ej. 8888-8888">
+                            </div>
+
+                            <div class="campo">
+                                <label for="proveedorCorreo">Correo electrónico *</label>
+                                <input id="proveedorCorreo" type="email" maxlength="100"
+                                       placeholder="Ej. proveedor@empresa.com">
+                            </div>
+
+                            <div class="campo">
+                                <label for="proveedorDireccion">Dirección *</label>
+                                <textarea id="proveedorDireccion" maxlength="160"
+                                          placeholder="Ej. San José, Costa Rica"></textarea>
+                            </div>
+
+                            <div id="mensajeProveedor" class="mensaje" role="alert"></div>
+
+                            <div class="acciones-formulario">
+                                <button class="btn btn-primary" type="submit" id="btnGuardarProveedor">
+                                    Guardar proveedor
+                                </button>
+                                <button class="btn btn-secondary oculto" type="button" id="btnCancelarProveedor">
+                                    Cancelar edición
+                                </button>
+                            </div>
+                        </form>
+                    </article>
+
+                    <article class="card tabla-card">
+                        <div class="card-header">
+                            <div>
+                                <p class="eyebrow">Directorio</p>
+                                <h3>Lista de proveedores</h3>
+                            </div>
+                        </div>
+
+                        <div class="tabla-contenedor">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Empresa</th>
+                                        <th>Teléfono</th>
+                                        <th>Correo</th>
+                                        <th>Dirección</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaProveedores"></tbody>
+                            </table>
+                        </div>
+
+                        <div id="sinProveedores" class="estado-vacio">
+                            No hay proveedores registrados.
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/Primer-Mini-Proyecto-2/src/js/proveedores.js"></script>
+    <script src="/Primer-Mini-Proyecto-2/src/js/productos.js"></script>
+    <script src="/Primer-Mini-Proyecto-2/src/js/app.js"></script>
+</body>
+</html>
