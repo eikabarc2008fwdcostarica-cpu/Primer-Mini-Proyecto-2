@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gorilla Logic | Panel Administrativo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../src/styles/Dashboard administrativo.css">
+</head>
+<body>
+  <div class="app-shell" id="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-top"><a class="brand" href="#dashboard"><span class="brand-mark">G</span><span>GORILLA <span>LOGIC</span></span></a><button class="close-menu" id="close-menu" aria-label="Cerrar menu">&times;</button></div>
+      <nav class="nav-list" aria-label="Navegacion principal">
+        <p class="nav-caption">MENU PRINCIPAL</p>
+        <button class="nav-item active" data-view="dashboard"><span>▦</span> Dashboard General</button>
+        <p class="nav-caption">GESTION EMPRESARIAL</p>
+        <button class="nav-item" data-view="clients"><span>◉</span> Administracion de Clientes</button>
+        <button class="nav-item" data-view="products"><span>▣</span> Administracion de Productos</button>
+        <button class="nav-item" data-view="providers"><span>◇</span> Administracion de Proveedores</button>
+        <p class="nav-caption">SEGURIDAD</p>
+        <button class="nav-item" data-view="new-admin"><span>+</span> Crear nuevo admin</button>
+      </nav>
+      <div class="sidebar-bottom"><div class="help-card"><span>✦</span><div><strong>&iquest;Necesitas ayuda?</strong><small>Centro de soporte</small></div></div><button class="logout-button" id="logout-button"><span>⇥</span> Cerrar sesion</button></div>
+    </aside>
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+    <main class="main-content">
+      <header class="header"><div class="header-title"><button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">☰</button><div><p class="breadcrumb">GORILLA LOGIC / <span id="breadcrumb">DASHBOARD</span></p><h1 id="page-title">Dashboard General</h1></div></div><div class="header-actions"><button class="notification" aria-label="Notificaciones">♧<i></i></button><div class="user-card"><div class="avatar" id="avatar">RS</div><div><strong id="user-name">Rick S&aacute;nchez</strong><small><i class="online-dot"></i><span id="user-role">Administrador</span></small></div><span class="chevron">⌄</span></div></div></header>
+      <section class="workspace">
+        <div id="dashboard-view" class="view active">
+          <div class="welcome"><div><p class="eyebrow">RESUMEN OPERATIVO</p><h2>Todo bajo control, <span id="welcome-name">Rick.</span></h2><p>Estas estadisticas se actualizan con los datos de tus modulos.</p></div><div class="date-badge">◷ <span id="current-date"></span></div></div>
+          <section class="kpi-section"><div class="section-heading"><div><h3>Clientes</h3><p>Relacion y crecimiento de clientes</p></div><span class="section-icon customers">◉</span></div><div class="kpi-grid"><article class="kpi-card"><p>Total de clientes</p><strong id="kpi-client-total">0</strong><small class="info">Registros del modulo</small></article><article class="kpi-card"><p>Clientes activos</p><strong id="kpi-client-active">0</strong><small class="positive">● Estado activo</small></article><article class="kpi-card"><p>Nuevos este mes</p><strong id="kpi-client-new">0</strong><small class="muted">Creados este mes</small></article></div></section>
+          <section class="kpi-section"><div class="section-heading"><div><h3>Productos</h3><p>Inventario y rendimiento comercial</p></div><span class="section-icon products">▣</span></div><div class="kpi-grid"><article class="kpi-card"><p>Total en inventario</p><strong id="kpi-product-stock">0</strong><small class="info">Unidades disponibles</small></article><article class="kpi-card alert-card"><p>Productos con stock bajo</p><strong id="kpi-product-low">0</strong><small class="warning">● Menos de 10 unidades</small></article><article class="kpi-card"><p>Mas vendido</p><strong id="kpi-product-top" class="product-name">Sin datos</strong><small id="kpi-product-sales" class="muted">Agrega productos para iniciar</small></article></div></section>
+          <section class="kpi-section"><div class="section-heading"><div><h3>Proveedores</h3><p>Cadena de suministro y cumplimiento</p></div><span class="section-icon providers">◇</span></div><div class="kpi-grid"><article class="kpi-card"><p>Proveedores registrados</p><strong id="kpi-provider-total">0</strong><small class="info">Registros del modulo</small></article><article class="kpi-card"><p>Pedidos pendientes</p><strong id="kpi-provider-pending">0</strong><small class="warning">● Requieren seguimiento</small></article><article class="kpi-card"><p>Entregas a tiempo</p><strong id="kpi-provider-ontime">0%</strong><small class="positive">Basado en entregas registradas</small></article></div></section>
+        </div>
+        <section id="module-view" class="view module-view" aria-live="polite"><div id="module-container" class="module-container"></div></section>
+      </section>
+    </main>
+  </div>
+  <script src="../src/js/Dashboard administrativo.js"></script>
+</body>
+</html>
