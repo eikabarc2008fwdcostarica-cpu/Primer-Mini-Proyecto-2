@@ -1,0 +1,107 @@
+<!-- Sección de Administración de Clientes -->
+<!-- Insertar dentro del <main> de tu dashboard -->
+<section class="clientes-section" id="clientesSection">
+  <header class="section-header">
+    <div>
+      <h1>Administración de Clientes</h1>
+      <p class="section-subtitle">Registra, consulta, edita y elimina clientes del sistema</p>
+    </div>
+    <button class="btn-accent" id="btnNuevoCliente">
+      <span>+</span> Nuevo cliente
+    </button>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <input type="text" id="buscarCliente" placeholder="Buscar por nombre o correo...">
+    </div>
+    <select id="filtroEstado" class="filter-select">
+      <option value="todos">Todos los estados</option>
+      <option value="activo">Activos</option>
+      <option value="inactivo">Inactivos</option>
+    </select>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="clientes-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Teléfono</th>
+          <th>Dirección</th>
+          <th>Estado</th>
+          <th>Registro</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="clientesTableBody">
+        <!-- Filas generadas dinámicamente con JS -->
+      </tbody>
+    </table>
+    <p class="empty-state" id="emptyState">No hay clientes registrados todavía.</p>
+  </div>
+</section>
+
+<!-- Modal de registro/edición -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <header class="modal-header">
+      <h2 id="modalTitle">Nuevo cliente</h2>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </header>
+
+    <form id="clienteForm" class="cliente-form" novalidate>
+      <input type="hidden" id="clienteId">
+
+      <div class="form-group">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" name="nombre" required>
+        <span class="error-message" id="nombreError"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="correo">Correo electrónico</label>
+        <input type="email" id="correo" name="correo" required>
+        <span class="error-message" id="correoError"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="telefono">Teléfono</label>
+        <input type="tel" id="telefono" name="telefono" required>
+        <span class="error-message" id="telefonoError"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="direccion">Dirección</label>
+        <input type="text" id="direccion" name="direccion" required>
+        <span class="error-message" id="direccionError"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="estado">Estado</label>
+        <select id="estado" name="estado">
+          <option value="activo">Activo</option>
+          <option value="inactivo">Inactivo</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="btnCancelar">Cancelar</button>
+        <button type="submit" class="btn-accent">Guardar cliente</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal de confirmación de eliminación -->
+<div class="modal-overlay" id="confirmOverlay">
+  <div class="modal modal-confirm">
+    <h2>¿Eliminar cliente?</h2>
+    <p>Esta acción no se puede deshacer.</p>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="btnCancelarEliminar">Cancelar</button>
+      <button class="btn-danger" id="btnConfirmarEliminar">Eliminar</button>
+    </div>
+  </div>
+</div>
