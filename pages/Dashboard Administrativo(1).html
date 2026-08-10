@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gorilla Logic | Dashboard Administrativo</title>
+<link rel="stylesheet" href="../src/styles/Dashboard Administrativo.css">
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <!-- ==================== MENÚ LATERAL ==================== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-badge">GL</div>
+        <span class="brand-text">Gorilla<span>Logic</span></span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-section="inicio">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M9.5 21v-6.5h5V21"/></svg>
+          Inicio
+        </a>
+        <a href="#" class="nav-item" data-section="proyectos">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
+          Proyectos
+        </a>
+        <a href="#" class="nav-item" data-section="usuarios">
+          <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/><path d="M15.5 5.2A3.2 3.2 0 0 1 17 11.3"/><path d="M17.2 14a6 6 0 0 1 4 5.6"/></svg>
+          Usuarios
+        </a>
+        <a href="#" class="nav-item" data-section="reportes">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M12 20V4"/><path d="M20 20v-7"/><path d="M2.5 20h19"/></svg>
+          Reportes
+        </a>
+        <a href="#" class="nav-item" data-section="tareas">
+          <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="17" rx="2.5"/><path d="M8 12.3l2.6 2.6L16.3 9"/></svg>
+          Tareas
+        </a>
+        <a href="#" class="nav-item" data-section="configuracion">
+          <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a1.7 1.7 0 0 0 .34 1.9l.06.06a2.1 2.1 0 1 1-2.96 2.96l-.06-.06a1.7 1.7 0 0 0-1.9-.34 1.7 1.7 0 0 0-1 1.55V19.9a2.1 2.1 0 1 1-4.2 0v-.09a1.7 1.7 0 0 0-1.1-1.55 1.7 1.7 0 0 0-1.9.34l-.06.06a2.1 2.1 0 1 1-2.96-2.96l.06-.06a1.7 1.7 0 0 0 .34-1.9 1.7 1.7 0 0 0-1.55-1H4.1a2.1 2.1 0 1 1 0-4.2h.09a1.7 1.7 0 0 0 1.55-1.1 1.7 1.7 0 0 0-.34-1.9l-.06-.06a2.1 2.1 0 1 1 2.96-2.96l.06.06a1.7 1.7 0 0 0 1.9.34H10.5a1.7 1.7 0 0 0 1-1.55V4.1a2.1 2.1 0 1 1 4.2 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.9-.34l.06-.06a2.1 2.1 0 1 1 2.96 2.96l-.06.06a1.7 1.7 0 0 0-.34 1.9V10.5a1.7 1.7 0 0 0 1.55 1H19.9a2.1 2.1 0 1 1 0 4.2h-.09a1.7 1.7 0 0 0-1.55 1Z"/></svg>
+          Configuración
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn-logout">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 21H5.5A2.5 2.5 0 0 1 3 18.5v-13A2.5 2.5 0 0 1 5.5 3H9"/><path d="M16.5 16.5 21 12l-4.5-4.5"/><path d="M21 12H9"/></svg>
+          Cerrar sesión
+        </button>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- ==================== CONTENIDO PRINCIPAL ==================== -->
+    <div class="main-wrapper">
+
+      <!-- ENCABEZADO -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="menu-toggle" class="menu-toggle" aria-label="Abrir menú">
+            <svg viewBox="0 0 24 24"><path d="M4 6.5h16"/><path d="M4 12h16"/><path d="M4 17.5h16"/></svg>
+          </button>
+          <h1 class="page-title">Panel Administrativo</h1>
+        </div>
+
+        <div class="topbar-right">
+          <span class="icon-btn" title="Notificaciones">
+            <svg viewBox="0 0 24 24"><path d="M12 3.5a5.5 5.5 0 0 0-5.5 5.5v3.2c0 .7-.25 1.37-.7 1.9L4.5 15.8c-.6.7-.13 1.8.79 1.8H18.7c.92 0 1.4-1.1.79-1.8l-1.3-1.7a3 3 0 0 1-.69-1.9V9A5.5 5.5 0 0 0 12 3.5Z"/><path d="M9.7 20a2.4 2.4 0 0 0 4.6 0"/></svg>
+            <span class="badge">3</span>
+          </span>
+
+          <!-- INFORMACIÓN DEL USUARIO -->
+          <div class="user-info">
+            <div class="user-avatar" id="user-avatar">GL</div>
+            <div class="user-text">
+              <span class="user-name" id="user-name">—</span>
+              <span class="user-role" id="user-role">—</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ÁREA PRINCIPAL DE TRABAJO -->
+      <main class="content">
+        <div class="content-heading">
+          <h2>Bienvenido, <span id="welcome-name">Usuario</span></h2>
+          <p>Este es el resumen general del sistema de Gorilla Logic.</p>
+        </div>
+
+        <!-- TARJETAS CON INFORMACIÓN RESUMIDA -->
+        <section class="cards-grid">
+          <div class="stat-card">
+            <div class="stat-icon icon-accent">
+              <svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Proyectos Activos</span>
+              <span class="stat-value">12</span>
+              <span class="stat-trend up">+2 esta semana</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon icon-warning">
+              <svg viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="17" rx="2.5"/><path d="M8 12.3l2.6 2.6L16.3 9"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Tareas Pendientes</span>
+              <span class="stat-value">7</span>
+              <span class="stat-trend down">-3 esta semana</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon icon-secondary">
+              <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 20a6.2 6.2 0 0 1 12.4 0"/><path d="M15.5 5.2A3.2 3.2 0 0 1 17 11.3"/><path d="M17.2 14a6 6 0 0 1 4 5.6"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Usuarios Activos</span>
+              <span class="stat-value">24</span>
+              <span class="stat-trend up">+5 este mes</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon icon-success">
+              <svg viewBox="0 0 24 24"><path d="M3 12.5 8 15l4.5-9 3 6.5H21"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Estado del Sistema</span>
+              <span class="stat-value status-ok">Operativo</span>
+              <span class="stat-trend">99.9% uptime</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- CONTENIDO ADICIONAL -->
+        <section class="panels-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Actividad Reciente</h3>
+            </div>
+            <ul class="activity-list">
+              <li><span class="dot dot-accent"></span> Nuevo proyecto <strong>"Sistema de Facturación"</strong> creado</li>
+              <li><span class="dot dot-success"></span> Tarea <strong>"Diseño UI"</strong> marcada como completada</li>
+              <li><span class="dot dot-warning"></span> Usuario <strong>Carlos M.</strong> solicitó acceso a Reportes</li>
+              <li><span class="dot dot-secondary"></span> Reunión de equipo programada para mañana</li>
+            </ul>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Progreso de Proyectos</h3>
+            </div>
+            <div class="progress-item">
+              <div class="progress-label"><span>Sistema de Facturación</span><span>75%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-label"><span>App Móvil Gorilla</span><span>45%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:45%"></div></div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-label"><span>Portal de Clientes</span><span>90%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="../src/js/Dashboard Administrativo.js"></script>
+</body>
+</html>
